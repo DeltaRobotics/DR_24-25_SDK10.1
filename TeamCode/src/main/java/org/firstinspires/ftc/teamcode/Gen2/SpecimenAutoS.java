@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.robotHardware;
-
 @Autonomous(name="SpecimenAutoS")
 //@Disabled
 
@@ -48,6 +46,10 @@ public class SpecimenAutoS extends LinearOpMode {
 
     public static double x, y, finalAngle;
 
+    ElapsedTime currentTime;
+
+    double deltaTime = 0;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -55,6 +57,8 @@ public class SpecimenAutoS extends LinearOpMode {
 
         robot.resetDriveEncoders();
         robot.odo.resetPosAndIMU();
+
+        currentTime = new ElapsedTime();
 
         intake = hardwareMap.crservo.get("intake");
         extensionWrist = hardwareMap.servo.get("extensionWrist");
@@ -128,11 +132,13 @@ public class SpecimenAutoS extends LinearOpMode {
 
         firstPlace(robot);
 
-        //firstPickup(robot);
+        //firstPush(robot);
 
-        //secondPickup(robot);
+        //secondPush(robot);
 
-        //thirdPickup(robot);
+        //thirdPush(robot);
+
+        firstCycle(robot);
 
         firstCycle(robot);
 
@@ -142,31 +148,35 @@ public class SpecimenAutoS extends LinearOpMode {
     public void firstPlace(robotHardwarePinPoint robot) {
 
         robot.changeAccuracy(1,Math.toRadians(1));
-        robot.changeSpeed(.8,.8);
+        robot.changeSpeed(1,1);
 
         x = 30.75;
         y = 12;
         finalAngle = Math.toRadians(0);
 
-        slidesR.setTargetPosition(1500);
+
+        slidesR.setTargetPosition(1600);
         slidesR.setPower(1);
         slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slidesL.setTargetPosition(1500);
+        slidesL.setTargetPosition(1600);
         slidesL.setPower(1);
         slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         specimenArm.setPosition(robot.SPECIMEN_ARM_PLACE);
         specimenWrist.setPosition(robot.SPECIMEN_WRIST_PLACE);
 
-        robot.wait(400,robot.odometers);
+        robot.wait(500,robot.odometers);
 
-        time = robot.currentTime.milliseconds() + 5000;
-        while((Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) && !robot.boolTimer(time)){
+        deltaTime = currentTime.milliseconds() + 1600;
+
+        while((Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) && deltaTime > currentTime.milliseconds()){
 
             robot.goToPosSingle(x, y, finalAngle, Math.toRadians(0));
 
         }
 
+        telemetry.addData("time4", currentTime.milliseconds());
+        telemetry.update();
 
         robot.mecanumDrive(0,0,0,0);
 
@@ -178,14 +188,12 @@ public class SpecimenAutoS extends LinearOpMode {
         finalAngle = Math.toRadians(0);
         robot.goToPos(x,y,finalAngle,Math.toRadians(180));
 
-        robot.wait(600,robot.odometers);
-
         specimenArm.setPosition(robot.SPECIMEN_ARM_PICKUP);
         specimenWrist.setPosition(robot.SPECIMEN_WRIST_PICKUP);
 
     }
 
-    public void firstPickup(robotHardwarePinPoint robot) {
+    public void firstPush(robotHardwarePinPoint robot) {
 
         robot.changeAccuracy(1,Math.toRadians(1));
         robot.changeSpeed(0.75,0.75);
@@ -238,7 +246,7 @@ public class SpecimenAutoS extends LinearOpMode {
 
     }
 
-    public void secondPickup(robotHardwarePinPoint robot) {
+    public void secondPush(robotHardwarePinPoint robot) {
 
         robot.changeAccuracy(1,Math.toRadians(1));
         robot.changeSpeed(0.75,0.75);
@@ -293,7 +301,7 @@ public class SpecimenAutoS extends LinearOpMode {
 
     }
 
-    public void thirdPickup(robotHardwarePinPoint robot) {
+    public void thirdPush(robotHardwarePinPoint robot) {
 
         robot.changeAccuracy(1,Math.toRadians(1));
         robot.changeSpeed(0.75,0.75);
@@ -351,18 +359,18 @@ public class SpecimenAutoS extends LinearOpMode {
 
     public void firstCycle(robotHardwarePinPoint robot) {
 
-        robot.changeAccuracy(1,Math.toRadians(1));
-        robot.changeSpeed(0.75,0.75);
+        robot.changeAccuracy(.5,Math.toRadians(1));
+        robot.changeSpeed(1,1);
 
-        //time = robot.currentTime.milliseconds() + 6000;
+        deltaTime = currentTime.milliseconds() + 2000;
 
-        x = 0;
+        x = -.5;
         y = -23;
         finalAngle = Math.toRadians(0);
 
-        while((Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy)) {
+        while((Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) && deltaTime > currentTime.milliseconds()) {
 
-            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(0));
+            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(-150));
 
             slidesR.setTargetPosition(100);
             slidesR.setPower(1);
@@ -371,19 +379,22 @@ public class SpecimenAutoS extends LinearOpMode {
             slidesL.setPower(1);
             slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            specimenClaw.setPosition(.5);
+
             specimenArm.setPosition(robot.SPECIMEN_ARM_PICKUP);
             specimenWrist.setPosition(robot.SPECIMEN_WRIST_PICKUP);
 
         }
 
         specimenClaw.setPosition(1);
+        robot.mecanumDrive(0,0,0,0);
 
         robot.wait(500,robot.odometers);
 
-        slidesR.setTargetPosition(1500);
+        slidesR.setTargetPosition(1600);
         slidesR.setPower(1);
         slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slidesL.setTargetPosition(1500);
+        slidesL.setTargetPosition(1600);
         slidesL.setPower(1);
         slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -393,17 +404,37 @@ public class SpecimenAutoS extends LinearOpMode {
         robot.mecanumDrive(0,0,0,0);
 
         robot.wait(250,robot.odometers);
+        robot.changeSpeed(1,1);
+        robot.changeAccuracy(4,Math.toRadians(10));
 
-        x = 31;
+        x = 18;
         y = 12;
         finalAngle = Math.toRadians(0);
-        robot.goToPos(x,y,finalAngle,0);
+        robot.goToPos(x,y,finalAngle,Math.toRadians(45));
+
+
+        x = 30.75;
+        y = 12;
+        finalAngle = Math.toRadians(0);
+        robot.changeAccuracy(1,Math.toRadians(1));
+
+        deltaTime = currentTime.milliseconds() + 2000;
+
+        while((Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) && deltaTime > currentTime.milliseconds()){
+
+            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(0));
+
+        }
+        robot.mecanumDrive(0,0,0,0);
 
         robot.changeAccuracy(2,Math.toRadians(5));
 
         x = 26;
+        y = 12;
         finalAngle = Math.toRadians(0);
-        robot.goToPos(x,y,finalAngle,0);
+        robot.goToPos(x,y,finalAngle,Math.toRadians(180));
+        robot.mecanumDrive(0,0,0,0);
+
 
         robot.changeAccuracy(1,Math.toRadians(1));
 

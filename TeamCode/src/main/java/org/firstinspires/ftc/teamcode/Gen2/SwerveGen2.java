@@ -88,6 +88,8 @@ public class SwerveGen2 extends LinearOpMode
 
     double[] timeArray = new double[20];
 
+    double time = 0;
+
     RI30HV2.AutoGrab autoGrab = RI30HV2.AutoGrab.START;
 
     @Override
@@ -235,7 +237,7 @@ public class SwerveGen2 extends LinearOpMode
         }
 
 
-        if(upDown && horizontalExtension.getCurrentPosition() < .13 && bucketArm.getPosition() == .115 && bucketWrist.getPosition() == .9){
+        if(upDown && horizontalExtension.getCurrentPosition() < .1 && bucketArm.getPosition() == .99 && bucketWrist.getPosition() == .9){
             telemetry.addData("MainThing", true);
             if (out && in){
                 telemetry.addData("Thing", true);
@@ -251,7 +253,7 @@ public class SwerveGen2 extends LinearOpMode
 
 
             }
-            else if(robot.boolTimer(timeArray[1] + 400) ){
+            else if(robot.boolTimer(timeArray[1] + 500) ){
                 intake.setPower(1);
 
             }
@@ -377,7 +379,9 @@ public class SwerveGen2 extends LinearOpMode
 
         }
 
-        if(gamepad2.y){
+
+
+        if(gamepad2.y){//going up
             if(converter){
 
                 motorMTConverter.setTargetPosition(5573 - MTCoffset);
@@ -395,12 +399,13 @@ public class SwerveGen2 extends LinearOpMode
 
         }
 
-        if(gamepad2.b){
+        if(gamepad2.b){//prep
             intake.setPower(0);
             bucketWrist.setPosition(1);
             bucketArm.setPosition(.45);
-            MTConverter.setPosition(.8);
+            MTConverter.setPosition(.85);
             turret.setPosition(.2);
+            extensionWrist.setPosition(.5);
 
             specimenArm.setPosition(.1);
             specimenClaw.setPosition(1);
@@ -410,7 +415,7 @@ public class SwerveGen2 extends LinearOpMode
             converter = true;
         }
 
-        if(gamepad2.a){
+        if(gamepad2.a){//going down
 
             if(converter){
 
@@ -470,18 +475,18 @@ public class SwerveGen2 extends LinearOpMode
             button2RB = true;
         }
 
-        if(gamepad2.a && button2A){//resetting slide's encoder
+        if(gamepad2.x && button2X){//resetting slide's encoder
 
             slidesR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             slidesL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            button2A = false;
+            button2X = false;
 
         }
 
-        if(!gamepad2.a && !button2A){
+        if(!gamepad2.x && !button2X){
 
-            button2A = true;
+            button2X = true;
         }
 
 
