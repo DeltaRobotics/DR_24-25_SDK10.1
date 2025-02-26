@@ -203,7 +203,6 @@ public class BucketAutoS extends LinearOpMode {
          *
          */
 
-
         bucketArm.setPosition(robot.BUCKET_ARM_REST);//going to rest position/down
         bucketWrist.setPosition(robot.BUCKET_WRIST_REST);//rest
 
@@ -217,7 +216,7 @@ public class BucketAutoS extends LinearOpMode {
 
             robot.goToPosSingle(x, y, finalAngle, Math.toRadians(-90));
 
-
+            //Slides Down
             slidesR.setTargetPosition(100);
             slidesR.setPower(1);
             slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -228,9 +227,10 @@ public class BucketAutoS extends LinearOpMode {
 
         }
 
-        robot.goToPos(5,35,Math.toRadians(180),Math.toRadians(-90));
+        robot.goToPos(5,35,Math.toRadians(180),Math.toRadians(0));
 
         extensionWrist.setPosition(robot.WRIST_PICKUP);
+        turret.setPosition(robot.TURRET_LEFT);
 
         robot.mecanumDrive(0,0,0,0);
         robot.wait(250, robot.odometers);
@@ -239,11 +239,15 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(350, robot.odometers);
 
-        horizontalExtension.setPosition(.2);
+        horizontalExtension.setTargetPosition(100);   //EXTEND
+        horizontalExtension.setPower(1);
+        horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.wait(500, robot.odometers);
 
-        horizontalExtension.setPosition(.1);
+        horizontalExtension.setTargetPosition(250);   //RETRACT
+        horizontalExtension.setPower(1);
+        horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.wait(500, robot.odometers);
 
@@ -260,7 +264,7 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(250, robot.odometers);
 
-        x = -19; y = 3; finalAngle = Math.toRadians(45);
+        x = -19; y = 3; finalAngle = Math.toRadians(45); //Change to dropoff pos
 
         while(Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) {
 
@@ -286,8 +290,6 @@ public class BucketAutoS extends LinearOpMode {
         bucketWrist.setPosition(robot.BUCKET_WRIST_REST);//rest
 
         robot.wait(500, robot.odometers);
-
-        extensionWrist.setPosition(.5);
     }
 
     public void secondCycle(robotHardwarePinPoint robot){
@@ -325,11 +327,15 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(350, robot.odometers);
 
-        horizontalExtension.setPosition(.2);
+        horizontalExtension.setTargetPosition(100);   //EXTEND
+        horizontalExtension.setPower(1);
+        horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.wait(500, robot.odometers);
 
-        horizontalExtension.setPosition(.1);
+        horizontalExtension.setTargetPosition(250);   //RETRACT
+        horizontalExtension.setPower(1);
+        horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.wait(500, robot.odometers);
 
@@ -415,11 +421,15 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(350, robot.odometers);
 
-        horizontalExtension.setPosition(.2);
+        horizontalExtension.setTargetPosition(100);   //EXTEND
+        horizontalExtension.setPower(1);
+        horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.wait(500, robot.odometers);
 
-        horizontalExtension.setPosition(.1);
+        horizontalExtension.setTargetPosition(250);   //RETRACT
+        horizontalExtension.setPower(1);
+        horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.wait(500, robot.odometers);
 
@@ -476,7 +486,29 @@ public class BucketAutoS extends LinearOpMode {
     }
 
     public void park(robotHardwarePinPoint robot){
-        
+
+        x = 0;y = 50; finalAngle = Math.toRadians(0);
+        while(Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) {
+        robot.goToPosSingle(x, y, finalAngle, Math.toRadians(180));
+        robot.wait(1500,robot.odometers);
+        //Reset to Init Pos. for TeleOp
+            bucketWrist.setPosition(1);  //Tuned
+            bucketArm.setPosition(.99);  //Tuned
+            MTConverter.setPosition(1);  //Tuned
+            specimenArm.setPosition(.1);
+            specimenClaw.setPosition(1);
+            specimenWrist.setPosition(.65);
+
+            horizontalExtension.setTargetPosition(0);
+            horizontalExtension.setPower(.5);
+            horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);  //Tuned   Smaller # is Out
+
+        }
+        robot.mecanumDrive(0,0,0,.6);
+
+        robot.wait(1000,robot.odometers);
+
+        robot.mecanumDrive(0,0,0,.6);
     }
 
 
