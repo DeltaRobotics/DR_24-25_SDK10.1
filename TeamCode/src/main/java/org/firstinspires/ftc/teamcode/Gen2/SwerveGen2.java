@@ -54,7 +54,7 @@ public class SwerveGen2 extends LinearOpMode
     public boolean button2DU = true;
     public boolean button2DD = true;
 
-    public boolean upDown = false;
+    public boolean upDown = true;
     public boolean out = false;
     public boolean in = true;
     public boolean converter = false;
@@ -348,6 +348,7 @@ public class SwerveGen2 extends LinearOpMode
 
         if(gamepad2.dpad_right && button2DR){
             turret.setPosition(robot.TURRET_RIGHT);
+            extensionWrist.setPosition(.55);
             button2DR = false;
         }
 
@@ -392,8 +393,8 @@ public class SwerveGen2 extends LinearOpMode
 
             slidesR.setTargetPosition(1500);
             slidesL.setTargetPosition(1500);
-            slidesR.setPower(.5);
-            slidesL.setPower(.5);
+            slidesR.setPower(0);
+            slidesL.setPower(1);
             slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -416,7 +417,6 @@ public class SwerveGen2 extends LinearOpMode
         }
 
         if(gamepad2.a){//going down
-
             if(converter){
 
                 motorMTConverter.setTargetPosition(-MTCoffset);
