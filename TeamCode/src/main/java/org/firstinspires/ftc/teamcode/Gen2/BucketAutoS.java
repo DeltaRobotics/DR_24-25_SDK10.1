@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="BucketAutoS")
-@Disabled
+//@Disabled
 
 public class BucketAutoS extends LinearOpMode {
     public DcMotor slidesR = null;
