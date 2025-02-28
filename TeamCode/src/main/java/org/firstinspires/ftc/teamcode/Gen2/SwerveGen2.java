@@ -54,9 +54,10 @@ public class SwerveGen2 extends LinearOpMode
     public boolean button2DU = true;
     public boolean button2DD = true;
 
-    public boolean upDown = true;
+    public boolean upDown = false;
     public boolean out = false;
     public boolean in = true;
+    public boolean prep = true;
     public boolean converter = false;
     public boolean B = false;
     public boolean Y = false;
@@ -66,6 +67,9 @@ public class SwerveGen2 extends LinearOpMode
 
     public boolean[] timerArray = new boolean[20];
 
+    boolean upAlready = false;
+
+    boolean doubleHang = false;
 
     public Servo extensionWrist = null;
     public CRServo intake = null;
@@ -169,6 +173,7 @@ public class SwerveGen2 extends LinearOpMode
         bucketWrist.setPosition(robot.BUCKET_WRIST_REST);
         bucketArm.setPosition(robot.BUCKET_ARM_REST);
         turret.setPosition(robot.TURRET_MIDDLE);
+        extensionWrist.setPosition(.2);
 
 
 
@@ -237,7 +242,7 @@ public class SwerveGen2 extends LinearOpMode
         }
 
 
-        if(upDown && horizontalExtension.getCurrentPosition() < .1 && bucketArm.getPosition() == .99 && bucketWrist.getPosition() == .9){
+        if(upDown && gamepad1.right_trigger < .1 && bucketArm.getPosition() == .99 && bucketWrist.getPosition() == .9){
             telemetry.addData("MainThing", true);
             if (out && in){
                 telemetry.addData("Thing", true);
@@ -253,7 +258,7 @@ public class SwerveGen2 extends LinearOpMode
 
 
             }
-            else if(robot.boolTimer(timeArray[1] + 500) ){
+            else if(robot.boolTimer(timeArray[1] + 900) ){
                 intake.setPower(1);
 
             }
@@ -269,11 +274,6 @@ public class SwerveGen2 extends LinearOpMode
             horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
-        else {
-            horizontalExtension.setTargetPosition(0);
-            horizontalExtension.setPower(1);
-            horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
 
         //intake up and down
         if (gamepad1.left_trigger > .5 && buttonLT) {
@@ -282,7 +282,7 @@ public class SwerveGen2 extends LinearOpMode
             if (!upDown) {
                 extensionWrist.setPosition(robot.WRIST_DROP);//upPos
                 turret.setPosition(robot.TURRET_MIDDLE);
-                intake.setPower(1);
+                //intake.setPower(1);
                 upDown = true;
                 out = true;
                 SPEED = 1;
@@ -382,10 +382,9 @@ public class SwerveGen2 extends LinearOpMode
 
 
 
-        if(gamepad2.y){//going up
+        if((gamepad2.y && button2Y) && !doubleHang){//going up
             if(converter){
-
-                motorMTConverter.setTargetPosition(5573 - MTCoffset);
+                motorMTConverter.setTargetPosition(5730);
                 motorMTConverter.setPower(1);
                 motorMTConverter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -393,33 +392,120 @@ public class SwerveGen2 extends LinearOpMode
 
             slidesR.setTargetPosition(1500);
             slidesL.setTargetPosition(1500);
-            slidesR.setPower(0);
+            slidesR.setPower(1);
             slidesL.setPower(1);
             slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            upAlready = false;
+            button2Y = false;
+
+        }
+        else if(gamepad2.y && button2Y){
+            if(converter){
+                motorMTConverter.setTargetPosition(1040);
+                motorMTConverter.setPower(1);
+                motorMTConverter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            }
+
+            slidesR.setTargetPosition(280);
+            slidesL.setTargetPosition(280);
+            slidesR.setPower(1);
+            slidesL.setPower(1);
+            slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            doubleHang = false;
+            button2Y = false;
         }
 
-        if(gamepad2.b){//prep
-            intake.setPower(0);
-            bucketWrist.setPosition(1);
-            bucketArm.setPosition(.45);
-            MTConverter.setPosition(.85);
-            turret.setPosition(.2);
-            extensionWrist.setPosition(.5);
 
-            specimenArm.setPosition(.1);
-            specimenClaw.setPosition(1);
-            specimenWrist.setPosition(.65);
+
+
+        if(!gamepad2.y && !button2Y){
+            button2Y = true;
+
+        }
+
+
+
+        if(gamepad2.b || timerArray[15]){//prep
+            if (!timerArray[15]){
+                timeArray[15] = robot.currentTime.milliseconds();//must have button press or will break
+                timerArray[15] = true;
+            }
+
+            if(robot.boolTimer(timeArray[15] + 2000)){
+                MTConverter.setPosition(.85);
+            }
+            else if (robot.boolTimer(timeArray[15] + 1500) ) {
+
+
+                slidesR.setTargetPosition(0);
+                slidesL.setTargetPosition(0);
+                slidesR.setPower(1);
+                slidesL.setPower(1);
+                slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            }
+            else if(robot.boolTimer(timeArray[15] + 500) ){
+                bucketWrist.setPosition(1);
+                bucketArm.setPosition(.35);
+                turret.setPosition(.2);
+                extensionWrist.setPosition(.4);
+                intake.setPower(0);
+
+                specimenArm.setPosition(.1);
+                specimenClaw.setPosition(1);
+                specimenWrist.setPosition(.65);
+
+                horizontalExtension.setTargetPosition(0);
+                horizontalExtension.setPower(1);
+                horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            }
+            else{//first thing to happen
+
+                horizontalExtension.setTargetPosition(300);
+                horizontalExtension.setPower(1);
+                horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            }
+
+
+
 
             MTCoffset = slidesR.getCurrentPosition();
             converter = true;
         }
 
-        if(gamepad2.a){//going down
-            if(converter){
+        if(gamepad2.dpad_down && button2DD){
 
-                motorMTConverter.setTargetPosition(-MTCoffset);
+            bucketArm.setPosition(.4);
+            specimenArm.setPosition(.28);
+
+            button2DD = false;
+        }
+
+        if(!gamepad2.dpad_down && !button2DD){
+
+            button2DD = true;
+        }
+
+        if(gamepad2.a && button2A){//going down
+            if(converter && !upAlready){
+
+                motorMTConverter.setTargetPosition(0);
+                motorMTConverter.setPower(1);
+                motorMTConverter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                upAlready = true;
+                doubleHang = true;
+            }
+            else {
+                motorMTConverter.setTargetPosition(motorMTConverter.getCurrentPosition() - 500);
                 motorMTConverter.setPower(1);
                 motorMTConverter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
@@ -430,10 +516,14 @@ public class SwerveGen2 extends LinearOpMode
             slidesR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            button2A = false;
+
         }
 
+        if(!gamepad2.a && !button2A){
 
-
+            button2A = true;
+        }
 
 
         //manual reset
@@ -511,8 +601,8 @@ public class SwerveGen2 extends LinearOpMode
 
 
             }
-            else if (robot.boolTimer(timeArray[12] + 500)) {
-                SlidesPosition = 1500; //Position Not Correct
+            else if (robot.boolTimer(timeArray[12] + 300)) {
+                SlidesPosition = 1250; //Position Not Correct
                 slidesR.setTargetPosition(SlidesPosition);
                 slidesL.setTargetPosition(SlidesPosition);
                 slidesR.setPower(1);
