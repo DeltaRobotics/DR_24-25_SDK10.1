@@ -138,11 +138,11 @@ public class SpecimenAutoS extends LinearOpMode {
 
         //thirdPush(robot);
 
-        firstCycle(robot, -1);
+        firstCycle(robot, -0);
 
-        firstCycle(robot, -2);
+        firstCycle(robot, -0);
 
-        firstCycle(robot, -3);
+        firstCycle(robot, -0);
 
         park(robot);
 
@@ -358,7 +358,7 @@ public class SpecimenAutoS extends LinearOpMode {
 
         while((Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) && deltaTime > currentTime.milliseconds()){
 
-            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(45));
+            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(30));
 
         }
         robot.mecanumDrive(0,0,0,0);
@@ -379,6 +379,8 @@ public class SpecimenAutoS extends LinearOpMode {
     public void park(robotHardwarePinPoint robot) {
 
         robot.changeAccuracy(5, Math.toRadians(10));
+
+        specimenArm.setPosition(robot.SPECIMEN_ARM_PICKUP);
 
         slidesR.setTargetPosition(0);
         slidesR.setPower(1);
