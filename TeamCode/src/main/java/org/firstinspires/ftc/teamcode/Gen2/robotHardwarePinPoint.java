@@ -131,14 +131,14 @@ public class robotHardwarePinPoint extends LinearOpMode
     public final double WRIST_DROP = 0;
     public final double WRIST_PICKUP = .65;
 
-    public final double TURRET_RIGHT = 0.25;
-    public final double TURRET_MIDDLE = 0.55;
+    public final double TURRET_RIGHT = 0.2;
+    public final double TURRET_MIDDLE = 0.5;
     public final double TURRET_LEFT = 0.8;
 
-    public final double BUCKET_ARM_DROP = .2;
+    public final double BUCKET_ARM_DROP = .22;
     public final double BUCKET_ARM_REST = .99;
 
-    public final double BUCKET_WRIST_DROP = .65;
+    public final double BUCKET_WRIST_DROP = .64;
     public final double BUCKET_WRIST_REST = .9;
 
     public final double SPECIMEN_ARM_PLACE = 0.58;
@@ -148,8 +148,8 @@ public class robotHardwarePinPoint extends LinearOpMode
     public final double SPECIMEN_CLAW_CLOSE = 0.1;
     public final double SPECIMEN_CLAW_OPEN = 0.45;
 
-    public final double SPECIMEN_WRIST_PLACE = 0.4;
-    public final double SPECIMEN_WRIST_PICKUP = .1;
+    public final double SPECIMEN_WRIST_PLACE = 0.35;
+    public final double SPECIMEN_WRIST_PICKUP = .15;
 
     double oldTime = 0;
     public GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer

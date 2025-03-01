@@ -140,10 +140,13 @@ public class BucketAutoS extends LinearOpMode {
          * Calling the Methods
          */
         firstDump(robot);
+
         firstCycle(robot);
+
         secondCycle(robot);
+
         thirdCycle(robot);
-        park(robot);
+
 
 
 
@@ -203,14 +206,17 @@ public class BucketAutoS extends LinearOpMode {
          *
          */
 
+        robot.changeSpeed(1,1);
+        robot.changeAccuracy(2,Math.toRadians(2));
+
         bucketArm.setPosition(robot.BUCKET_ARM_REST);//going to rest position/down
         bucketWrist.setPosition(robot.BUCKET_WRIST_REST);//rest
 
         robot.wait(500, robot.odometers);
 
-        x = 5;
-        y = 25;
-        finalAngle = Math.toRadians(180);
+        x = -12;
+        y = 9;
+        finalAngle = Math.toRadians(70);
 
         while(Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) {
 
@@ -224,10 +230,13 @@ public class BucketAutoS extends LinearOpMode {
             slidesL.setPower(1);
             slidesL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            horizontalExtension.setTargetPosition(775);   //EXTEND
+            horizontalExtension.setPower(1);
+            horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         }
 
-        robot.goToPos(5,35,Math.toRadians(180),Math.toRadians(0));
+        robot.goToPos(-12,8,Math.toRadians(85),Math.toRadians(0));
 
         extensionWrist.setPosition(robot.WRIST_PICKUP);
         turret.setPosition(robot.TURRET_LEFT);
@@ -237,23 +246,17 @@ public class BucketAutoS extends LinearOpMode {
 
         intake.setPower(-1);
 
-        robot.wait(350, robot.odometers);
-
-        horizontalExtension.setTargetPosition(100);   //EXTEND
-        horizontalExtension.setPower(1);
-        horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.wait(500, robot.odometers);
+        robot.wait(1000, robot.odometers);
 
         horizontalExtension.setTargetPosition(250);   //RETRACT
         horizontalExtension.setPower(1);
         horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.wait(500, robot.odometers);
+        robot.wait(1000, robot.odometers);
 
         extensionWrist.setPosition(robot.WRIST_DROP);
 
-        robot.wait(525, robot.odometers);
+        robot.wait(250, robot.odometers);
 
         intake.setPower(1);
 
@@ -302,13 +305,16 @@ public class BucketAutoS extends LinearOpMode {
          *
          */
 
-        x = -4;
-        y = 34;
-        finalAngle = Math.toRadians(180);
+        robot.changeSpeed(1,1);
+        robot.changeAccuracy(2,Math.toRadians(2));
+
+        x = -14;
+        y = 9;
+        finalAngle = Math.toRadians(85);
 
         while(Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) {
 
-            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(-90));
+            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(0));
 
 
             slidesR.setTargetPosition(100);
@@ -327,9 +333,11 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(350, robot.odometers);
 
-        horizontalExtension.setTargetPosition(100);   //EXTEND
+        horizontalExtension.setTargetPosition(775);   //EXTEND
         horizontalExtension.setPower(1);
         horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.goToPos(-14,8,Math.toRadians(100),0);
 
         robot.wait(500, robot.odometers);
 
@@ -352,7 +360,7 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(250, robot.odometers);
 
-        x = -18;
+        x = -19;
         y = 3;
         finalAngle = Math.toRadians(45);
 
@@ -392,16 +400,19 @@ public class BucketAutoS extends LinearOpMode {
          *
          */
 
+        robot.changeSpeed(1,1);
+        robot.changeAccuracy(2,Math.toRadians(2));
+
         extensionWrist.setPosition(.5);
 
         //going to the third pick up
-        x = -13;
-        y = 34;
+        x = -8;
+        y = 33;
         finalAngle = Math.toRadians(180);
 
         while(Math.abs(x-robot.GlobalX) > robot.moveAccuracy || Math.abs(y-robot.GlobalY) > robot.moveAccuracy || Math.abs(robot.angleWrapRad(finalAngle - robot.GlobalHeading)) > robot.angleAccuracy) {
 
-            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(-90));
+            robot.goToPosSingle(x, y, finalAngle, Math.toRadians(180));
 
 
             slidesR.setTargetPosition(100);
@@ -421,7 +432,7 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(350, robot.odometers);
 
-        horizontalExtension.setTargetPosition(100);   //EXTEND
+        horizontalExtension.setTargetPosition(550);   //EXTEND
         horizontalExtension.setPower(1);
         horizontalExtension.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -446,7 +457,7 @@ public class BucketAutoS extends LinearOpMode {
 
         robot.wait(250, robot.odometers);
 
-        x = -18;
+        x = -19;
         y = 3;
         finalAngle = Math.toRadians(45);
 
