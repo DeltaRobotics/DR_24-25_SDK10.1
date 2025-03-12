@@ -149,7 +149,7 @@ public class robotHardwarePinPoint extends LinearOpMode
     public final double SPECIMEN_CLAW_OPEN = 0.45;
 
     public final double SPECIMEN_WRIST_PLACE = 0.35;
-    public final double SPECIMEN_WRIST_PICKUP = .15;
+    public final double SPECIMEN_WRIST_PICKUP = .175;
 
     double oldTime = 0;
     public GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer
