@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 @TeleOp(name="PinpointTesting", group="Linear OpMode")
@@ -383,7 +383,7 @@ public class PinpointTesting extends LinearOpMode
             odo.update();
 
 
-            telemetry.addData("x",odo.getXOffset());
+            telemetry.addData("x",odo.getXOffset(DistanceUnit.INCH));
 
             telemetry.update();
 
